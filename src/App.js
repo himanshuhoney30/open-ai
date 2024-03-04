@@ -1,25 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
 
-function App() {
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import LoginPage from './components/LoginPage';
+import HomePage from './components/HomePage';
+
+const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleLogin = () => {
+    // Perform authentication check (e.g., call an API)
+    // For simplicity, using a hardcoded check
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route
+          path="/login"
+          element={
+            isLoggedIn ? (
+              <Navigate to="/home" />
+            ) : (
+              <LoginPage onLogin={handleLogin} />
+            )
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            isLoggedIn ? (
+              <HomePage onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        {/* Add additional routes here */}
+        <Route index element={<Navigate to="/login" />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
